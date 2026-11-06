@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e121b">
+<title>HUNCHY HUNCH — بَيْنَ رَقْمَيْن</title>
+<style>
+:root{--bg:#0e121b;--panel:#1b2230;--gold:#d2b887;--dim:#ab9c82;--line:#514633;--white:#f1e6d1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100dvh}
+main{max-width:480px;margin:auto;padding:22px 17px 45px}
+header{text-align:center;padding:10px 0 20px}
+.logo{display:block;margin:0 auto 6px;width:67px;height:57px}
+h1{font-size:27px;letter-spacing:2px;color:var(--gold);margin:0}
+.tag{letter-spacing:2px;font-size:11px;margin-top:5px;color:var(--dim)}
+.panel{border:1px solid var(--line);background:#141a25;border-radius:19px;padding:19px;margin:12px 0}
+.center{text-align:center}
+.hidden{display:none!important}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid #7c6949;padding:13px 14px;background:#242d3c;color:var(--gold);font-weight:650}
+button:disabled{opacity:.4;cursor:not-allowed}
+.primary{background:var(--gold);color:#141923;border-color:var(--gold)}
+.wide{width:100%;margin-top:10px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+h2{color:var(--gold);font-size:19px;margin:4px 0 14px}
+h3{margin:6px 0;color:var(--gold)}
+p{line-height:1.65}
+.mode{display:block;width:100%;text-align:left;margin:10px 0;padding:17px}
+.mode span{display:block;font-size:12px;color:var(--dim);font-weight:400;margin-top:5px}
+.score{background:var(--panel);padding:13px 6px;border-radius:12px;text-align:center;min-width:0}
+.score strong{font-size:27px;color:var(--gold);display:block}
+.score span{font-size:11px;color:var(--dim)}
+.score.player-card{border:2px solid #343b46;padding:15px 7px}
+.score.player-card strong{font-size:35px}
+.score.player-card span{display:block;font-size:18px;font-weight:750;color:#e4d2b4;margin-top:5px}
+.score.player-card.active-player{border-color:#d2b887;background:#29261f;box-shadow:0 0 0 1px #9e8358}
+.turn-indicator{display:block;font-size:11px;color:#d2b887;margin-top:7px;min-height:16px}
+.numbers{display:flex;gap:12px;justify-content:center;margin:20px 0 8px}
+.numberbox{width:112px;height:112px;display:flex;align-items:center;justify-content:center;background:#10141d;border:2px solid #a78d61;border-radius:18px;font-size:55px;font-weight:700;color:var(--gold)}
+.numberbox.goodbox{background:#14532d;border-color:#4ade80;color:white}
+.numberbox.badbox{background:#7f1d1d;border-color:#f87171;color:white}
+.names label{display:block;margin:13px 0 5px;color:var(--gold)}
+.names input{font-size:18px;text-align:start}
+.endpanel{border:1px solid var(--gold);padding:18px;border-radius:16px;margin-top:16px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:6px 12px;color:var(--dim);font-size:12px}
+.result{min-height:60px;margin:14px 0;font-size:18px;color:var(--gold);font-weight:650}
+.sub{font-size:13px;color:var(--dim);margin-top:7px}
+.guess button{font-size:18px;padding:17px 8px}
+.good{color:#9eb9a3}
+.bad{color:#c39b96}
+.input{width:100%;font:inherit;font-size:24px;text-align:center;padding:15px;border-radius:12px;border:1px solid #806e4d;background:#202838;color:var(--white)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.top button{padding:9px 12px;font-size:12px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.statgrid .score strong{font-size:22px}
+.foot{text-align:center;font-size:11px;color:#847966;margin-top:25px}
+body[dir=rtl] .mode{text-align:right}
+body[dir=rtl] .top{flex-direction:row-reverse}
+#finalPanel:not(.hidden){position:fixed;inset:0;z-index:20;margin:0;border:0;border-radius:0;background:#0e121b;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;text-align:center}
+#finalPanel h2{font-size:clamp(29px,8vw,43px);line-height:1.45;max-width:420px;margin:0 0 22px;color:#d2b887}
+#finalPanel p{font-size:20px;margin:0 0 24px}
+#finalPanel button{max-width:360px;width:100%;margin-top:12px}
+#finalPanel::before{content:'♛';font-size:45px;color:#d2b887;margin-bottom:15px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<svg class="logo" viewBox="0 0 120 95" aria-label="HH crown">
+  <path d="M18 35 L30 68 Q31 72 36 72 H84 Q89 72 90 68 L102 35 L80 45 L60 22 L40 45 Z" fill="none" stroke="#d2b887" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M34 82 H86" stroke="#d2b887" stroke-width="4" stroke-linecap="round"/>
+  <text x="60" y="63" font-size="17" fill="#d2b887" text-anchor="middle">HH</text>
+</svg>
+<h1 id="brand">HUNCHY HUNCH</h1>
+<div class="tag" id="tag">TRUST YOUR INSTINCT</div>
+</header>
+
+<div class="top">
+  <button id="homeBtn" onclick="goHome()">⌂ MENU</button>
+  <button id="langBtn" onclick="switchLang()">العربية</button>
+</div>
+
+<section id="home" class="panel">
+  <h2 id="choose">CHOOSE YOUR MODE</h2>
+  <button class="mode" onclick="start('solo')" id="soloBtn">SOLO CHALLENGE<span>First to 5 against the house</span></button>
+  <button class="mode" onclick="start('endless')" id="endlessBtn">ENDLESS INSTINCT<span>Keep guessing. Beat your best streak.</span></button>
+  <button class="mode" onclick="start('pass')" id="passBtn">PASS & PLAY<span>Two players, one phone</span></button>
+  <button class="mode" onclick="start('pass')" id="friendsBtn">FRIENDS DUEL<span>Challenge a friend locally</span></button>
+</section>
+
+<section id="names" class="panel names hidden">
+  <h2 id="namesTitle">PLAYER NAMES</h2>
+  <label id="name1Label" for="name1">PLAYER ONE</label>
+  <input class="input" id="name1" maxlength="18" autocomplete="off">
+  <label id="name2Label" for="name2">PLAYER TWO</label>
+  <input class="input" id="name2" maxlength="18" autocomplete="off">
+  <button class="wide primary" id="namesStart" onclick="beginPass()">START CHALLENGE</button>
+</section>
+
+<section id="play" class="hidden">
+  <div class="panel center">
+    <div class="pill" id="modeTitle"></div>
+    <div class="row" id="scoreRow" style="margin-top:15px">
+      <div class="score" id="aCard"><strong id="aScore">0</strong><span id="aLabel">YOU</span><small class="turn-indicator" id="aTurn"></small></div>
+      <div class="score" id="bCard"><strong id="bScore">0</strong><span id="bLabel">HOUSE</span><small class="turn-indicator" id="bTurn"></small></div>
+    </div>
+    <div class="sub" id="turn"></div>
+    <div class="numbers">
+      <div class="numberbox" id="reference">?</div>
+      <div class="numberbox" id="revealed" aria-label="Secret number"></div>
+    </div>
+    <div class="sub" id="refLabel">REFERENCE NUMBER</div>
+    <div id="choiceArea">
+      <p id="prompt">Will the secret number be higher or lower?</p>
+      <div class="row guess">
+        <button id="higher" onclick="guess('higher')">↑ HIGHER</button>
+        <button id="lower" onclick="guess('lower')">↓ LOWER</button>
+      </div>
+    </div>
+    <div id="secretArea" class="hidden">
+      <p id="secretPrompt">Player 1: pick a secret number different from the reference.</p>
+      <input class="input" id="secretInput" type="number" min="1" max="100" inputmode="numeric" placeholder="1–100">
+      <button class="wide primary" onclick="lockSecret()" id="lockBtn">LOCK THE NUMBER</button>
+    </div>
+    <div id="handoffArea" class="hidden">
+      <p id="handoffText">Pass the phone to the guesser. The secret is hidden.</p>
+      <button class="wide primary" onclick="ready()" id="readyBtn">I'M READY</button>
+    </div>
+    <div class="result" id="result" aria-live="polite"></div>
+    <button class="wide primary hidden" id="nextBtn" onclick="nextRound()">NEXT ROUND</button>
+    <div id="finalPanel" class="endpanel hidden">
+      <h2 id="finalTitle"></h2>
+      <p id="finalScore"></p>
+      <button class="wide primary" id="restartBtn" onclick="restart()">PLAY AGAIN</button>
+      <button class="wide" id="finalMenu" onclick="goHome()">MENU</button>
+    </div>
+  </div>
+  <div id="endlessStats" class="panel hidden">
+    <h3 id="statTitle">YOUR STATS</h3>
+    <div class="statgrid">
+      <div class="score"><strong id="correct">0</strong><span id="correctLabel">CORRECT</span></div>
+      <div class="score"><strong id="wrong">0</strong><span id="wrongLabel">WRONG</span></div>
+      <div class="score"><strong id="streak">0</strong><span id="streakLabel">CURRENT STREAK</span></div>
+      <div class="score"><strong id="best">0</strong><span id="bestLabel">BEST STREAK</span></div>
+    </div>
+  </div>
+</section>
+<div class="foot" id="foot">OFFLINE PLAYABLE PROTOTYPE · HUNCHY HUNCH</div>
+</main>
+
+<script>
+let finalWinner=0,lang='en',mode='solo',ref=0,secret=0,score=[0,0],round=0,phase='',guesser=1,stats={correct:0,wrong:0,streak:0,best:0},playerNames=['',''];
+const $=id=>document.getElementById(id);
+let finishTimer=null;
+const rand=()=>1+Math.floor(Math.random()*100);
+const randRef=()=>2+Math.floor(Math.random()*98);
+const other=n=>{let x;do{x=rand()}while(x===n);return x};
+
+const T={
+  en:{brand:'HUNCHY HUNCH',tag:'TRUST YOUR INSTINCT',choose:'CHOOSE YOUR MODE',solo:'SOLO CHALLENGE',endless:'ENDLESS INSTINCT',pass:'PASS & PLAY',friends:'FRIENDS DUEL',fd:'Challenge a friend locally',sd:'First to 5 against the house',ed:'Keep guessing. Beat your best streak.',pd:'Two players, one phone',you:'YOU',house:'HOUSE',p1:'PLAYER ONE',p2:'PLAYER TWO',ref:'REFERENCE NUMBER',question:'Will the secret number be higher or lower?',higher:'↑ HIGHER',lower:'↓ LOWER',secret:'Choose a secret number (1–100) different from the reference.',lock:'LOCK THE NUMBER',handoff:'Pass the phone to the guessing player. The secret is hidden.',ready:"I’M READY",right:'NAILED IT!',wrongmsg:"THE NEXT ONE’س YOURS!",next:'NEXT ROUND',again:'PLAY AGAIN',keepCrown:'DEFEND YOUR CROWN',takeCrown:'PLAY TO CLAIM THE CROWN',startagain:'START AGAIN',win:'THE CROWN IS YOURS!',lose:'THE CROWN SLIPPED AWAY!',wins:'WINS!',reveal:'SECRET NUMBER',turn:'TO GUESS',stats:'YOUR STATS',correct:'CORRECT',wrong:'WRONG',streak:'CURRENT STREAK',best:'BEST STREAK',invalid:'Choose a valid number from 1 to 100, not equal to the reference.',menu:'⌂ MENU',foot:'OFFLINE PLAYABLE PROTOTYPE · HUNCHY HUNCH',exit:'Leave this match? Your unfinished match will be lost.',names:'PLAYER NAMES',begin:'START CHALLENGE',finalScore:'FINAL SCORE',menuFinal:'MENU',holding:'PHONE WITH YOU',waiting:'WAITING'},
+  ar:{brand:'بَيْنَ رَقْمَيْن',tag:'حَدْسُكَ هُوَ الفَيْصَلُ',choose:'اخْتَرْ نَمَطَ اللَّعِبِ',solo:'التَّحَدِّي الفَرْدِيّ',endless:'حَدْسٌ بِلَا نِهَايَةٍ',pass:'تَنَاوُبُ اللَّعِبِ',friends:'مُوَاجَهَةُ الأَصْدِقَاءِ',fd:'تحدَّ صديقاً على نفس الجهاز',sd:'أول من يصل إلى ٥ نقاط',ed:'خمّن بلا نهاية وحطّم رقمك القياسي',pd:'لاعبان على جهاز واحد',you:'أَنْتَ',house:'الكمبيوتر',p1:'اللَّاعِبُ الأَوَّلُ',p2:'اللَّاعِبُ الثَّانِي',ref:'الرَّقْمُ المَرْجِعِيُّ',question:'هل الرقم السري أعلى أم أقل؟',higher:'↑ أَعْلَى',lower:'↓ أَقَلّ',secret:'اختر رقماً سرياً من ١ إلى ١٠٠ مختلفاً عن الرقم المرجعي.',lock:'ثَبِّتِ الرَّقْمَ',handoff:'مرّر الهاتف للاعب الذي سيخمّن. الرقم السري مخفي.',ready:'أَنَا مُسْتَعِدٌّ',right:'أَصَبْتَ!',wrongmsg:'لَمْ تُوَفَّقْ!',next:'الجَوْلَةُ التَّالِيَةُ',again:'الْعَبْ مِنْ جَدِيدٍ',keepCrown:'دَافِعْ عَنْ تَاجِكَ!',takeCrown:'الْعَبْ لِاسْتِعَادَةِ التَّاجِ!',startagain:'ابْدَأْ مِنْ جَدِيدٍ',win:'التَّاجُ لَكَ!',lose:'انْتُزِعَ التَّاجُ!',wins:'فَازَ!',reveal:'الرَّقْمُ السِّرِّيُّ',turn:'دَوْرُ التَّخْمِينِ',stats:'إِحْصَائِيَّاتُكَ',correct:'صَحِيح',wrong:'خَطَأ',streak:'السِّلْسِلَةُ الحَالِيَّةُ',best:'أَفْضَلُ سِلْسِلَةٍ',invalid:'اختر رقماً صحيحاً من ١ إلى ١٠٠ ومختلفاً عن الرقم المرجعي.',menu:'⌂ القَائِمَة',foot:'نُسْخَةٌ تَجْرِيبِيَّةٌ تَعْمَلُ دُونَ إِنْتَرْنِت',exit:'هل ترغب في مغادرة المباراة؟ ستُلغى المباراة غير المكتملة.',names:'أَسْمَاءُ اللَّاعِبَيْنِ',begin:'ابْدَأِ التَّحَدِّي',finalScore:'النَّتِيجَةُ النِّهَائِيَّةُ',menuFinal:'القَائِمَةُ',holding:'الْهَاتِفُ مَعَكَ',waiting:'فِي الِانْتِظَارِ'}
+};
+
+function tr(k){return T[lang][k]}
+function set(id,val){$(id).textContent=val}
+function show(id,yes){$(id).classList.toggle('hidden',!yes)}
+
+function renderLang(){
+  document.documentElement.lang=lang;
+  document.body.dir=lang==='ar'?'rtl':'ltr';
+  set('brand',tr('brand'));
+  set('tag',tr('tag'));
+  set('choose',tr('choose'));
+  set('homeBtn',tr('menu'));
+  set('langBtn',lang==='en'?'العربية':'English');
+  for(let [id,k,d] of [['soloBtn','solo','sd'],['endlessBtn','endless','ed'],['passBtn','pass','pd'],['friendsBtn','friends','fd']])
+    $(id).innerHTML=tr(k)+'<span>'+tr(d)+'</span>';
+  set('foot',tr('foot'));
+  set('namesTitle',tr('names'));
+  set('name1Label',tr('p1'));
+  set('name2Label',tr('p2'));
+  set('namesStart',tr('begin'));
+  set('finalMenu',tr('menuFinal'));
+  set('modeTitle',tr(mode));
+  set('refLabel',tr('ref'));
+  set('prompt',tr('question'));
+  set('higher',tr('higher'));
+  set('lower',tr('lower'));
+  set('secretPrompt',tr('secret'));
+  set('lockBtn',tr('lock'));
+  set('handoffText',tr('handoff'));
+  set('readyBtn',tr('ready'));
+  set('statTitle',tr('stats'));
+  for(let k of ['correct','wrong','streak','best']) set(k+'Label',tr(k));
+  set('aLabel',mode==='pass'?(playerNames[0]||tr('p1')):tr('you'));
+  set('bLabel',mode==='pass'?(playerNames[1]||tr('p2')):tr('house'));
+  if(phase==='guess') set('turn',mode==='pass'?(guesser===0?playerNames[0]:playerNames[1])+' · '+tr('turn'):'');
+  if(phase==='secret') set('turn',(guesser===0?playerNames[1]:playerNames[0])+' · '+tr('lock'));
+  if(phase==='done') set('nextBtn',tr('next'));
+  set('restartBtn',phase==='finished'?(finalWinner===0?tr('keepCrown'):tr('takeCrown')):tr('again'));
+  updateActivePlayer();
+}
+
+function updateActivePlayer(){
+  const pass=mode==='pass'&&!$('play').classList.contains('hidden');
+  const holder=phase==='secret'?1-guesser:guesser;
+  for(let i=0;i<2;i++){
+    const card=$(i===0?'aCard':'bCard');
+    card.classList.toggle('player-card',pass);
+    card.classList.toggle('active-player',pass&&holder===i&&phase!=='finished');
+    set(i===0?'aTurn':'bTurn',pass&&phase!=='finished'?(holder===i?tr('holding'):tr('waiting')):'');
+  }
+}
+
+function switchLang(){
+  lang=lang==='en'?'ar':'en';
+  renderLang();
+}
+
+function goHome(){
+  if(!$('play').classList.contains('hidden')&&phase!=='finished'&&!confirm(tr('exit')))return;
+  clearTimeout(finishTimer);
+  show('home',true);
+  show('play',false);
+  show('names',false);
+  phase='home';
+}
+
+function start(m){
+  if(m==='pass'){
+    mode=m;
+    show('home',false);
+    show('play',false);
+    show('names',true);
+    renderLang();
+    return;
+  }
+  startGame(m);
+}
+
+function beginPass(){
+  playerNames=[$('name1').value.trim()||tr('p1'),$('name2').value.trim()||tr('p2')];
+  startGame('pass');
+}
+
+function restart(){
+  if(mode==='pass'){show('play',false);show('names',true);return;}
+  startGame(mode);
+}
+
+function startGame(m){
+  clearTimeout(finishTimer);
+  mode=m;
+  show('names',false);
+  score=[0,0];
+  round=0;
+  guesser=1;
+  stats={correct:0,wrong:0,streak:0,best:0};
+  show('home',false);
+  show('play',true);
+  show('endlessStats',m==='endless');
+  newRound();
+}
+
+function newRound(){
+  clearTimeout(finishTimer);
+  round++;
+  ref=randRef();
+  secret=mode==='pass'?null:other(ref);
+  set('reference',ref);
+  set('revealed','');
+  $('revealed').className='numberbox';
+  set('result','');
+  $('result').className='result';
+  show('nextBtn',false);
+  show('finalPanel',false);
+  show('choiceArea',mode!=='pass');
+  scoreRow:mode!=='endless';
+  show('secretArea',mode==='pass');
+  show('handoffArea',false);
+  show('scoreRow',mode!=='endless');
+  $('secretInput').value='';
+  phase=mode==='pass'?'secret':'guess';
+  updateScores();
+  renderLang();
+}
+
+function updateScores(){
+  set('aScore',score[0]);
+  set('bScore',score[1]);
+  set('correct',stats.correct);
+  set('wrong',stats.wrong);
+  set('streak',stats.streak);
+  set('best',stats.best);
+}
+
+function lockSecret(){
+  const n=Number($('secretInput').value);
+  if(!Number.isInteger(n)||n<1||n>100||n===ref){alert(tr('invalid'));return;}
+  secret=n;
+  phase='handoff';
+  show('secretArea',false);
+  show('handoffArea',true);
+  set('reference','?');
+  set('turn','');
+  updateActivePlayer();
+}
+
+function ready(){
+  phase='guess';
+  set('reference',ref);
+  show('handoffArea',false);
+  show('choiceArea',true);
+  renderLang();
+}
+
+function guess(direction){
+  if(phase!=='guess')return;
+  const correct=(direction==='higher'&&secret>ref)||(direction==='lower'&&secret<ref);
+  phase='done';
+  show('choiceArea',false);
+  set('revealed',secret);
+  $('revealed').classList.add(correct?'goodbox':'badbox');
+  const winnerIndex=mode==='pass'?guesser:0,loserIndex=1-winnerIndex;
+  if(mode==='endless'){
+    if(correct){
+      stats.correct++;
+      stats.streak++;
+      if(stats.streak>stats.best){
+        stats.best=stats.streak;
+        try{
+          let best=+(localStorage.getItem('hh_best')||0);
+          if(stats.best>best)localStorage.setItem('hh_best',stats.best);
+        }catch(e){}
+      }
+    }else{
+      stats.wrong++;
+      stats.streak=0;
+    }
+  }else{
+    const scoring=correct?winnerIndex:loserIndex,penalized=1-scoring;
+    score[scoring]++;
+    score[penalized]=Math.max(0,score[penalized]-1);
+  }
+  updateScores();
+  $('result').classList.add(correct?'good':'bad');
+  set('result',correct?tr('right'):tr('wrongmsg'));
+  $('result').style.whiteSpace='pre-line';
+  
+  if(mode!=='endless'&&(score[0]>=5||score[1]>=5)){
+    phase='finished';
+    const winning=score[0]>=5?0:1;
+    finalWinner=winning;
+    set('restartBtn',winning===0?tr('keepCrown'):tr('takeCrown'));
+    const label=mode==='pass'?playerNames[winning]:'';
+    set('finalTitle',mode==='solo'?(winning===0?tr('win'):tr('lose')):(tr('win')+' · '+label));
+    set('finalScore',tr('finalScore')+': '+score[0]+' – '+score[1]);
+    show('finalPanel',false);
+    show('nextBtn',false);
+    finishTimer=setTimeout(()=>{if(phase==='finished'&&!$('play').classList.contains('hidden'))show('finalPanel',true)},2000);
+  }else{
+    show('nextBtn',true);
+    set('nextBtn',mode==='endless'&&!correct?tr('startagain'):tr('next'));
+  }
+  updateActivePlayer();
+}
+
+function nextRound(){
+  if(mode==='pass') guesser=1-guesser;
+  newRound();
+}
+
+renderLang();
+</script>
+</body>
+</html>
